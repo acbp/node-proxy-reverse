@@ -15,7 +15,7 @@ const proxy = httpProxy.createProxyServer({
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
 	// Redirecionar todo o tráfego para o servidor alvo
-	proxy.web(req, res, { target: `http://${targetIP}:${targetPort}` });
+	proxy.web(req, res)
 });
 
 // Lidar com erros do proxy
