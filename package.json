@@ -2,9 +2,9 @@
 	"name": "node-proxy-reverse",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "main.js",
 	"scripts": {
-		"start": "node src/main.js"
+		"start": "node main.js"
 	},
 	"keywords": [],
 	"author": "",
