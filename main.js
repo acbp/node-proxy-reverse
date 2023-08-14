@@ -14,8 +14,13 @@ const proxy = httpProxy.createProxyServer({
 
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
+	if (req.url.match(/\/$|health/i)?.[0] && req.method === "GET") {
+		res.writeHead(204, { 'Content-Type': 'text/plain' });
+		return res.end('OK');
+	}
 	// Redirecionar todo o tráfego para o servidor alvo
 	proxy.web(req, res)
+
 });
 
 // Lidar com erros do proxy
@@ -30,3 +35,5 @@ proxyServer.listen(proxyPort, () => {
 	console.log(`Servidor proxy reverso em execução na porta ${proxyPort}`);
 	console.log('Envs', process.env)
 });
+
+proxyServer.on
