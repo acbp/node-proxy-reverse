@@ -28,5 +28,5 @@ proxy.on('error', (err, req, res) => {
 const proxyPort = process.env.PORT || 8080; // A porta em que o proxy vai ouvir
 proxyServer.listen(proxyPort, () => {
 	console.log(`Servidor proxy reverso em execução na porta ${proxyPort}`);
-	console.log('Envs', ...(process.env))
+	console.log('Envs', process.env)
 });
