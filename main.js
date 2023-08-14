@@ -24,6 +24,6 @@ proxy.on('error', (err, req, res) => {
 // Iniciar o servidor proxy
 const proxyPort = 8080; // A porta em que o proxy vai ouvir
 proxyServer.listen(proxyPort, () => {
-	console.log('ip', targetIP)
 	console.log(`Servidor proxy reverso em execução na porta ${proxyPort}`);
+	console.log('ip', targetIP)
 });
