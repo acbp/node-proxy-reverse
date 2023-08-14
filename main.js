@@ -8,7 +8,7 @@ const targetPort = process.env.targetPORT || 3000; // A porta do servidor alvo
 const proxy = httpProxy.createProxyServer({
 	target: {
 		host: targetIP,
-		port: targetPORT,
+		port: targetPort,
 	}
 });
 
