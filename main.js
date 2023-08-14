@@ -1,13 +1,16 @@
-const { log } = require('console');
 const http = require('http');
 const httpProxy = require('http-proxy');
 
-// Configurar o proxy reverso
-const proxy = httpProxy.createProxyServer({});
-
 // Endereço IP que você deseja redirecionar
 const targetIP = process.env.ip || '192.168.0.45';
-const targetPort = 3000; // A porta do servidor alvo
+const targetPort = process.env.targetPORT || 3000; // A porta do servidor alvo
+// Configurar o proxy reverso
+const proxy = httpProxy.createProxyServer({
+	target: {
+		host: targetIP,
+		port: targetPORT,
+	}
+});
 
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
@@ -22,8 +25,8 @@ proxy.on('error', (err, req, res) => {
 });
 
 // Iniciar o servidor proxy
-const proxyPort = 8080; // A porta em que o proxy vai ouvir
+const proxyPort = process.env.PORT || 8080; // A porta em que o proxy vai ouvir
 proxyServer.listen(proxyPort, () => {
 	console.log(`Servidor proxy reverso em execução na porta ${proxyPort}`);
-	console.log('ip', targetIP)
+	console.log('Envs', ...(process.env))
 });
