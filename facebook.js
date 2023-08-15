@@ -15,7 +15,11 @@ const proxy = httpProxy.createProxyServer({
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
 	console.info(req, `\n${req.method}:${req.url}`);
-
+	if (req.url.match(/\/$|health/i)?.[0]) {
+		res.writeHead(204, { 'Content-Type': 'text/plain' });
+		console.log('OK')
+		return res.end('OK');
+	}
 	const key = req.url.split("?").shift();
 	if (routes.has(key)) {
 		console.log('key', key);
@@ -36,7 +40,7 @@ const proxyServer = http.createServer((req, res) => {
 // Lidar com erros do proxy
 proxy.on('error', (err, req, res) => {
 	res.writeHead(500, { 'Content-Type': 'text/plain' });
-	res.end('Ocorreu um erro no proxy reverso.\n' + req.url);
+	res.end('Ocorreu um erro no proxy reverso.');
 });
 
 // Iniciar o servidor proxy
@@ -47,11 +51,28 @@ proxyServer.listen(proxyPort, () => {
 
 const routes = new Map();
 const add = (e, v) => routes.set(e, v)
-add("/health", (req, res) => {
-	let code = 204;
-	let msg = "OK"
-	console.log('OK')
+add("/webhook/facebook-realtime", (req, res) => {
+
+	const url = new URL("http://home" + req.url)
+	// Parse the query params
+	let mode = url.searchParams.get("hub.mode")
+	let token = url.searchParams.get("hub.verify_token");
+	let challenge = url.searchParams.get("hub.challenge")
+
+	let code = 404;
+	// Check if a token and mode is in the query string of the request
+	if (mode && token) {
+		// Check the mode and token sent is correct
+		if (mode === "subscribe" && token === "token") {
+			// Respond with the challenge token from the request
+			code = 200;
+			msg = (challenge);
+		} else {
+			// Respond with '403 Forbidden' if verify tokens do not match
+			code = (403);
+			msg = "Forbidden"
+		}
+	}
 	res.writeHead(code, { 'Content-Type': 'text/plain' });
 	res.end(msg);
 })
-add("/", routes.get("/health"))
