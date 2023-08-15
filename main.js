@@ -14,6 +14,7 @@ const proxy = httpProxy.createProxyServer({
 
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
+	console.info(`${req.method}:${req.url}`);
 	if (req.url.match(/\/$|health/i)?.[0] && req.method === "GET") {
 		res.writeHead(204, { 'Content-Type': 'text/plain' });
 		return res.end('OK');
