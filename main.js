@@ -2,7 +2,7 @@ const http = require('http');
 const httpProxy = require('http-proxy');
 
 // Endereço IP que você deseja redirecionar
-const targetIP = process.env.ip || '0.0.0.0';
+const targetIP = process.env.ip || '192.168.0.45'
 const targetPort = process.env.targetPORT || 3000; // A porta do servidor alvo
 // Configurar o proxy reverso
 const proxy = httpProxy.createProxyServer({
@@ -14,23 +14,24 @@ const proxy = httpProxy.createProxyServer({
 
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
-	console.info(req, `\n${req.method}:${req.url}`);
+	console.info(`\n${Date.now()}${req.method}:${req.url}`);
 
 	const key = req.url.split("?").shift();
+	console.info('key', key);
 	if (routes.has(key)) {
-		console.log('key', key);
 		return routes.get(key)(req, res);
 	}
-	const queryIP = new URL("http://domain" + req.url).searchParams.get('ip')
+
+	const queryIP = new URL("http://sub.domain.com" + req.url).searchParams.get('ip')
 	let url = `http://${targetIP}:${targetPort}`
+
+	console.log('proxy', url)
 	// Redirecionar todo o tráfego para o servidor alvo
 	if (queryIP) {
 		url = `http://${queryIP}/`;
-		console.log('proxy', url)
-		return proxy.web(req, res, { target: `${url}` })
 	}
 
-	return proxy.web(req, res)
+	return proxy.web(req, res, { target: `${url}` })
 });
 
 // Lidar com erros do proxy
