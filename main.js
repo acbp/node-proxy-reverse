@@ -17,7 +17,6 @@ const proxyServer = http.createServer((req, res) => {
 	console.info(`\n${Date.now()}${req.method}:${req.url}`);
 
 	const key = req.url.split("?").shift();
-	console.info('key', key);
 	if (routes.has(key)) {
 		return routes.get(key)(req, res);
 	}
@@ -25,7 +24,6 @@ const proxyServer = http.createServer((req, res) => {
 	const queryIP = new URL("http://sub.domain.com" + req.url).searchParams.get('ip')
 	let url = `http://${targetIP}:${targetPort}`
 
-	console.log('proxy', url)
 	// Redirecionar todo o tráfego para o servidor alvo
 	if (queryIP) {
 		url = `http://${queryIP}/`;
@@ -51,7 +49,6 @@ const add = (e, v) => routes.set(e, v)
 add("/health", (req, res) => {
 	let code = 204;
 	let msg = "OK"
-	console.log('OK')
 	res.writeHead(code, { 'Content-Type': 'text/plain' });
 	res.end(msg);
 })
