@@ -14,7 +14,6 @@ const proxy = httpProxy.createProxyServer({
 
 // Criar o servidor proxy
 const proxyServer = http.createServer((req, res) => {
-	console.info(`\n${Date.now()}${req.method}:${req.url}`);
 
 	const key = req.url.split("?").shift();
 	if (routes.has(key)) {
@@ -28,6 +27,7 @@ const proxyServer = http.createServer((req, res) => {
 	if (queryIP) {
 		url = `http://${queryIP}/`;
 	}
+	//console.info(`\n${Date.now()}${req.method}:${url}`);
 
 	return proxy.web(req, res, { target: `${url}` })
 });
